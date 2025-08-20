@@ -1,0 +1,37 @@
+{
+  "name": "promptgallery-backend",
+  "version": "1.0.0",
+  "description": "Backend for PromptGallery - AI Image Generation App",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "worker": "node src/workers/imageWorker.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mssql": "^9.1.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "multer": "^1.4.5",
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "helmet": "^6.1.5",
+    "morgan": "^1.10.0",
+    "redis": "^4.6.5",
+    "bull": "^4.10.4",
+    "express-rate-limit": "^6.7.0",
+    "joi": "^17.9.1",
+    "aws-sdk": "^2.1354.0",
+    "dotenv": "^16.0.3",
+    "express-validator": "^6.15.0",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "jest": "^29.5.0"
+  },
+  "author": "Tu Nombre",
+  "license": "MIT"
+} 

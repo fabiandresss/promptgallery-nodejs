@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # SQL Server
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: promptgallery-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - promptgallery-network
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: promptgallery-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - promptgallery-network
+
+  # Backend Node.js (PUERTO 4000)
+  backend:
+    build: ./backend
+    container_name: promptgallery-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    depends_on:
+      - sqlserver
+      - redis
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - promptgallery-network
+    restart: unless-stopped
+
+  # Worker para procesamiento de imágenes
+  worker:
+    build: ./backend
+    container_name: promptgallery-worker
+    command: npm run worker
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - backend
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - promptgallery-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+  redis_data:
+
+networks:
+  promptgallery-network:
+    driver: bridge 
